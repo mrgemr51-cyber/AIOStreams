@@ -1,15 +1,51 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/node"
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "app": {
+      "root": ".",
+      "runtime": "container"
+    },
+    "app-2": {
+      "root": "packages/desktop/app",
+      "runtime": "rust"
+    },
+    "docs": {
+      "root": "packages/docs",
+      "framework": "nextjs"
+    },
+    "jellyfin-web": {
+      "root": "packages/jellyfin-web",
+      "runtime": "container"
+    },
+    "server": {
+      "root": "packages/server",
+      "framework": "express"
     }
-  ],
-  "routes": [
+  },
+  "rewrites": [
     {
-      "src": "/(.*)",
-      "dest": "/"
+      "source": "/dashboard/(.*)",
+      "destination": {
+        "service": "app-2"
+      }
+    },
+    {
+      "source": "/docs/(.*)",
+      "destination": {
+        "service": "docs"
+      }
+    },
+    {
+      "source": "/api/(.*)",
+      "destination": {
+        "service": "server"
+      }
+    },
+    {
+      "source": "/(.*)",
+      "destination": {
+        "service": "app"
+      }
     }
   ]
 }
